@@ -15,16 +15,14 @@ class Login(View):
         Data = request.POST
         username = Data.get("username")
         Password = Data.get("password")
-        print(username)
         user = authenticate(username=username, password=Password)
 
         if user:
             login(request, user)
             if user.user_role == 'Admin':
-                print("Hello")
                 return redirect("/dashboard")
             else:
-                return redirect("dashboard/userdasboard")
+                return redirect("userdasboard")
         else:
             messages.error(request, "Invalid username or password.")
             return redirect("/login")

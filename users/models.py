@@ -1,8 +1,19 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import gettext_lazy as _
+from django_extensions.db.models import TimeStampedModel
 
 # Create your models here.
+class Department(TimeStampedModel):
+    department = models.CharField(max_length=500)
+
+    class Meta:
+        verbose_name = _("Department")
+        verbose_name_plural = _("Department")
+
+    def __str__(self):
+        return self.department
+
 
 class UserManager(BaseUserManager):
     """Define a model manager for User model with no username field."""
@@ -45,9 +56,23 @@ class User(AbstractUser):
     """
     username = models.CharField(_("username"), unique=True, max_length=150,)
 
+    department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True)
 
     user_role = models.CharField(max_length=50, default="Admin")
 
     USERNAME_FIELD = "username"
     REQUIRED_FIELDS = []
     objects = UserManager()
+
+
+class Feedback(TimeStampedModel):
+    feedback = models.CharField(max_length=500)
+    manager = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True,related_name='department_manager')
+    employee = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='department_employee')
+
+    class Meta:
+        verbose_name = _("Feedback")
+        verbose_name_plural = _("Feedback")
+
+    def __str__(self):
+        return self.Feedback
