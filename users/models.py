@@ -76,3 +76,20 @@ class Feedback(TimeStampedModel):
 
     def __str__(self):
         return self.Feedback
+
+class Goal(TimeStampedModel):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('Completed', 'Completed'),
+    ]
+    goal = models.TextField(null=True, blank=True)
+    employee = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='goal_employee')
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+    status = models.CharField(max_length=80, choices=STATUS_CHOICES, default='pending')
+    class Meta:
+        verbose_name = _("Goal")
+        verbose_name_plural = _("Goal")
+
+    def __str__(self):
+        return self.goal

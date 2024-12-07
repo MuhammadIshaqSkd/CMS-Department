@@ -1,6 +1,6 @@
 from django import forms
 from .models import User
-from .models import Department, Feedback
+from .models import Department, Feedback, Goal
 
 
 class UserForm(forms.ModelForm):
@@ -37,3 +37,13 @@ class FeedbackForm(forms.ModelForm):
     class Meta:
         model = Feedback
         fields = ['feedback', 'manager', 'employee']
+
+
+class GoalForm(forms.ModelForm):
+    class Meta:
+        model = Goal
+        fields = ['goal', 'employee', 'start_date', 'end_date', 'status']
+        widgets = {
+            'start_date': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+            'end_date': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+        }

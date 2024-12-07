@@ -6,7 +6,7 @@ from dashboard.views import (
 )
 from . import views
 from django.contrib.auth.views import LogoutView
-from .views import FeedbackListView, FeedbackCreateView, FeedbackDeleteView
+from .views import FeedbackListView, FeedbackCreateView, FeedbackEditView, FeedbackDeleteView
 
 urlpatterns = [
     path("", AdminDashboard.as_view(), name='admin_dashboard'),  # Add the name here
@@ -20,9 +20,15 @@ urlpatterns = [
     path('departments/delete/<int:department_id>/', views.delete_department, name='delete_department'),
     # Delete Department URL
 
-    path('feedbacks/', FeedbackListView.as_view(), name='feedback_list'),
-    path('feedbacks/add/', FeedbackCreateView.as_view(), name='add_feedback'),
-    path('edit_feedback/', views.edit_feedback, name='edit_feedback'),
-    path('feedbacks/delete/<int:pk>/', FeedbackDeleteView.as_view(), name='delete_feedback'),
+    # Feedback URLs
+    path('feedbacks/', FeedbackListView.as_view(), name='feedback_list'),  # List feedbacks
+    path('feedbacks/add/', FeedbackCreateView.as_view(), name='add_feedback'),  # Create feedback
+    path('feedbacks/edit/<int:pk>/', FeedbackEditView.as_view(), name='edit_feedback'),  # Edit feedback
+    path('feedbacks/delete/<int:pk>/', FeedbackDeleteView.as_view(), name='delete_feedback'),  # Delete feedback
+
+    path('goals/', views.GoalListView.as_view(), name='goal_list'),
+    path('goals/add/', views.GoalCreateView.as_view(), name='add_goal'),
+    path('goals/edit/<int:pk>/', views.GoalEditView.as_view(), name='edit_goal'),
+    path('goals/delete/<int:pk>/', views.GoalDeleteView.as_view(), name='delete_goal'),
 
 ]

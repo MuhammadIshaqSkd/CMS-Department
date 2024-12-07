@@ -46,6 +46,8 @@
         <h2 class="text-center">Admin Panel</h2>
         <a href="#" id="users-link">Users</a>
         <a href="#" id="departments-link">Departments</a>
+        <a href="#" id="feedbacks-link">Feedbacks</a>
+        <a href="#" id="goals-link">Goals</a>
         <a href="{% url 'logout' %}">Logout</a>
     </div>
 
@@ -110,30 +112,122 @@
                 </tbody>
             </table>
         </div>
+
+        <!-- Feedbacks Section -->
+        <div id="feedbacks-section" class="hidden">
+            <h1>Feedbacks</h1>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2>All Feedback</h2>
+                <a href="{% url 'add_feedback' %}" class="btn btn-success">Add Feedback</a>
+            </div>
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Feedback</th>
+                        <th>Manager</th>
+                        <th>Employee</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for feedback in feedbacks %}
+                    <tr>
+                        <td>{{ feedback.feedback }}</td>
+                        <td>{{ feedback.manager }}</td>
+                        <td>{{ feedback.employee }}</td>
+                        <td class="table-actions">
+                            <a href="{% url 'edit_feedback' feedback.id %}" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="{% url 'delete_feedback' feedback.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this feedback?');">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Goals Section -->
+        <div id="goals-section" class="hidden">
+            <h1>Goals</h1>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2>All Goals</h2>
+                <a href="{% url 'add_goal' %}" class="btn btn-success">Add Goal</a>
+            </div>
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Goal</th>
+                        <th>Employee</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for goal in goals %}
+                    <tr>
+                        <td>{{ goal.goal }}</td>
+                        <td>{{ goal.employee }}</td>
+                        <td>{{ goal.start_date }}</td>
+                        <td>{{ goal.end_date }}</td>
+                        <td>{{ goal.status }}</td>
+                        <td class="table-actions">
+                            <a href="{% url 'edit_goal' goal.id %}" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="{% url 'delete_goal' goal.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this goal?');">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Toggle visibility based on the sidebar link clicked
         const usersLink = document.getElementById('users-link');
         const departmentsLink = document.getElementById('departments-link');
+        const feedbacksLink = document.getElementById('feedbacks-link');
+        const goalsLink = document.getElementById('goals-link');
+
         const usersSection = document.getElementById('users-section');
         const departmentsSection = document.getElementById('departments-section');
+        const feedbacksSection = document.getElementById('feedbacks-section');
+        const goalsSection = document.getElementById('goals-section');
 
         usersLink.addEventListener('click', function() {
             usersSection.classList.remove('hidden');
             departmentsSection.classList.add('hidden');
+            feedbacksSection.classList.add('hidden');
+            goalsSection.classList.add('hidden');
         });
 
         departmentsLink.addEventListener('click', function() {
             departmentsSection.classList.remove('hidden');
             usersSection.classList.add('hidden');
+            feedbacksSection.classList.add('hidden');
+            goalsSection.classList.add('hidden');
+        });
+
+        feedbacksLink.addEventListener('click', function() {
+            feedbacksSection.classList.remove('hidden');
+            usersSection.classList.add('hidden');
+            departmentsSection.classList.add('hidden');
+            goalsSection.classList.add('hidden');
+        });
+
+        goalsLink.addEventListener('click', function() {
+            goalsSection.classList.remove('hidden');
+            usersSection.classList.add('hidden');
+            departmentsSection.classList.add('hidden');
+            feedbacksSection.classList.add('hidden');
         });
 
         // Default to show users section when page loads
         usersSection.classList.remove('hidden');
         departmentsSection.classList.add('hidden');
+        feedbacksSection.classList.add('hidden');
+        goalsSection.classList.add('hidden');
     </script>
 </body>
 </html>
