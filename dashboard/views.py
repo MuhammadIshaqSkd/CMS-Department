@@ -7,7 +7,6 @@ from users.forms import UserForm, DepartmentForm, FeedbackForm, GoalForm
 from django.contrib.auth.decorators import login_required
 from users.models import Department, Feedback, Goal
 # Create your views here.
-from django.http import JsonResponse
 
 
 User = get_user_model()
@@ -135,10 +134,12 @@ def delete_department(request, department_id):
     messages.success(request, 'Department deleted successfully!')
     return redirect('admin_dashboard')
 
+
 class FeedbackListView(View):
     def get(self, request):
         feedbacks = Feedback.objects.all()
         return render(request, 'feedback_list.html', {'feedbacks': feedbacks})
+
 
 class FeedbackCreateView(View):
     def get(self, request):
@@ -173,6 +174,7 @@ class FeedbackCreateView(View):
                 'employees': employees,
             })
 
+
 class FeedbackEditView(View):
     def get(self, request, pk):
         feedback = get_object_or_404(Feedback, pk=pk)
@@ -205,6 +207,7 @@ class FeedbackEditView(View):
             'feedback': feedback,
         })
 
+
 class FeedbackDeleteView(View):
     def get(self, request, pk):
         feedback = get_object_or_404(Feedback, pk=pk)
@@ -212,11 +215,13 @@ class FeedbackDeleteView(View):
         messages.success(request, "Feedback deleted successfully!")
         return redirect('admin_dashboard')  # Redirect to the feedback list page
 
+
 class GoalListView(View):
     def get(self, request):
         goals = Goal.objects.all()
 
         return render(request, 'goal_list.html', {'goals': goals})
+
 
 class GoalCreateView(View):
     def get(self, request):
@@ -236,6 +241,7 @@ class GoalCreateView(View):
         employees = User.objects.all()  # Adjust based on employee filter logic
         return render(request, 'goal_form.html', {'form': form, 'employees': employees})
 
+
 class GoalEditView(View):
     def get(self, request, pk):
         goal = get_object_or_404(Goal, pk=pk)
@@ -253,9 +259,14 @@ class GoalEditView(View):
         employees = User.objects.all()  # Adjust based on employee filter logic
         return render(request, 'goal_form.html', {'form': form, 'employees': employees, 'goal': goal})
 
+
 class GoalDeleteView(View):
     def get(self, request, pk):
         goal = get_object_or_404(Goal, pk=pk)
         goal.delete()
         messages.success(request, "Goal deleted successfully!")
         return redirect('goal_list')
+
+@login_required
+def logout(request):
+    return redirect('/')

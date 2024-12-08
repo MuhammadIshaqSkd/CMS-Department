@@ -5,7 +5,7 @@ from dashboard.views import (
 
 )
 from . import views
-from django.contrib.auth.views import LogoutView
+from django.contrib.auth import views as auth_views
 from .views import FeedbackListView, FeedbackCreateView, FeedbackEditView, FeedbackDeleteView
 
 urlpatterns = [
@@ -13,7 +13,7 @@ urlpatterns = [
     path("dashboard/create/", views.create_user, name="create_user"),
     path("dashboard/edit/<int:user_id>/", views.edit_user, name="edit_user"),
     path("dashboard/delete/<int:user_id>/", views.delete_user, name="delete_user"),
-    path("logout/", LogoutView.as_view(next_page="login"), name="logout"),
+    path('logout/', views.logout, name="logout"),  # Redirect to login page after logout
 
     path('departments/add/', views.add_department, name='add_department'),  # Add Department URL
     path('departments/edit/<int:department_id>/', views.edit_department, name='edit_department'),  # Edit Department URL
