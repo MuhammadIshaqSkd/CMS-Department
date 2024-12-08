@@ -255,7 +255,7 @@ class GoalEditView(View):
         if form.is_valid():
             form.save()
             messages.success(request, "Goal updated successfully!")
-            return redirect('goal_list')
+            return redirect('admin_dashboard')
         employees = User.objects.all()  # Adjust based on employee filter logic
         return render(request, 'goal_form.html', {'form': form, 'employees': employees, 'goal': goal})
 
@@ -265,7 +265,7 @@ class GoalDeleteView(View):
         goal = get_object_or_404(Goal, pk=pk)
         goal.delete()
         messages.success(request, "Goal deleted successfully!")
-        return redirect('goal_list')
+        return redirect('admin_dashboard')
 
 @login_required
 def logout(request):
