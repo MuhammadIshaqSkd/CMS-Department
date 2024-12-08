@@ -2,11 +2,14 @@ from django.urls import path
 
 from dashboard.views import (
     AdminDashboard,
-
 )
 from . import views
-from django.contrib.auth import views as auth_views
-from .views import FeedbackListView, FeedbackCreateView, FeedbackEditView, FeedbackDeleteView
+from .views import (
+    FeedbackListView,
+    FeedbackCreateView,
+    FeedbackEditView,
+    FeedbackDeleteView
+)
 
 urlpatterns = [
     path("", AdminDashboard.as_view(), name='admin_dashboard'),  # Add the name here
