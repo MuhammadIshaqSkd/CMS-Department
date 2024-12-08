@@ -19,10 +19,10 @@ class Login(View):
 
         if user:
             login(request, user)
-            if user.user_role == 'Admin':
+            if user.user_role == 'Admin' or user.user_role == 'Manager' or user.user_role == 'Employee':
                 return redirect("/dashboard")
             else:
-                return redirect("userdasboard")
+                return redirect("/")
         else:
             messages.error(request, "Invalid username or password.")
             return redirect("/login")

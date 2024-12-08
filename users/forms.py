@@ -3,6 +3,8 @@ from .models import User
 from .models import Department, Feedback, Goal
 
 
+from django.contrib.auth.hashers import make_password
+
 class UserForm(forms.ModelForm):
     USER_ROLE_CHOICES = [
         ('Manager', 'Manager'),
@@ -24,6 +26,13 @@ class UserForm(forms.ModelForm):
         if User.objects.filter(username=username).exists():
             raise forms.ValidationError("This username is already taken.")
         return username
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.password = make_password(self.cleaned_data['password'])  # Hash the password
+        if commit:
+            user.save()
+        return user
 
 
 

@@ -16,15 +16,23 @@
                 <label for="feedback" class="form-label">Feedback</label>
                 <textarea id="feedback" name="feedback" class="form-control" rows="4" required>{% if feedback %}{{ feedback.feedback }}{% endif %}</textarea>
             </div>
-            <div class="mb-3">
-                <label for="manager" class="form-label">Manager</label>
-                <select id="manager" name="manager" class="form-select" required>
-                    <option value="">Select Manager</option>
-                    {% for manager in managers %}
-                    <option value="{{ manager.id }}" {% if feedback and feedback.manager.id == manager.id %}selected{% endif %}>{{ manager.username }}</option>
-                    {% endfor %}
-                </select>
-            </div>
+            {% if req_user == 'Admin' %}
+                <div class="mb-3">
+                    <label for="manager" class="form-label">Manager</label>
+                    <select id="manager" name="manager" class="form-select" required>
+                        <option value="">Select Manager</option>
+                        {% for manager in managers %}
+                        <option value="{{ manager.id }}" {% if feedback and feedback.manager.id == manager.id %}selected{% endif %}>
+                            {{ manager.username }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% else %}
+                <!-- Hidden field to store the current user ID as the manager -->
+                <input type="hidden" id="manager" name="manager" value="{{ user.id }}">
+                {% endif %}
+
             <div class="mb-3">
                 <label for="employee" class="form-label">Employee</label>
                 <select id="employee" name="employee" class="form-select" required>

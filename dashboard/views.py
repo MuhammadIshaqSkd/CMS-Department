@@ -18,16 +18,16 @@ class AdminDashboard(LoginRequiredMixin, View):
 
     @staticmethod
     def get(request):
-        if request.user.user_role != "Admin":
-            messages.error(request, "Access denied.")
-            return redirect('/')
-
-        # Fetch data
         users = User.objects.all()
         departments = Department.objects.all()  # Get all departments
-        feedbacks = Feedback.objects.select_related('manager', 'employee')  # Fetch feedback data with related fields
+        feedbacks = Feedback.objects.all() # Fetch feedback data with related fields
         goals = Goal.objects.all()  # Fetch all goals
-
+        if request.user.user_role == "Manager":
+            feedbacks = feedbacks.filter(manager=request.user)
+            goals = goals.filter(employee__department=request.user.department)
+        if request.user.user_role == "Employee":
+            feedbacks = feedbacks.filter(employee=request.user)
+            goals = goals.filter(employee__department=request.user.department)
         return render(request, 'admin_dashboard.html', {
             "users": users,
             "departments": departments,  # Add departments to the context
@@ -48,9 +48,10 @@ def create_user(request):
             # If the form is not valid, display errors
             messages.error(request, 'There was an error creating the user.')
     else:
+        departments = Department.objects.all()  # Fetch all departments
         form = UserForm()
 
-    return render(request, 'add_user.html', {'form': form})
+    return render(request, 'add_user.html', {'form': form,'departments':departments})
 
 
 @login_required
@@ -142,13 +143,18 @@ class FeedbackListView(View):
 class FeedbackCreateView(View):
     def get(self, request):
         form = FeedbackForm()
+        req_user = request.user.user_role
         # Fetch users who can be managers or employees
         managers = User.objects.filter(user_role="Manager")  # or based on your own filter criteria
-        employees = User.objects.filter(user_role="Employee")  # or based on your own filter criteria
+        employees = User.objects.filter(user_role="Employee")
+        if req_user == 'Manager':
+            employees = employees.filter(department=request.user.department)
+        # or based on your own filter criteria
         return render(request, 'feedback_form.html', {
             'form': form,
             'managers': managers,
             'employees': employees,
+            'req_user':  req_user,
         })
 
     def post(self, request):
@@ -209,12 +215,16 @@ class FeedbackDeleteView(View):
 class GoalListView(View):
     def get(self, request):
         goals = Goal.objects.all()
+
         return render(request, 'goal_list.html', {'goals': goals})
 
 class GoalCreateView(View):
     def get(self, request):
         form = GoalForm()
         employees = User.objects.filter(user_role="Employee")  # or based on your own filter criteria
+        if request.user.user_role == 'Manager':
+            employees = employees.filter(department= request.user.department)
+
         return render(request, 'goal_form.html', {'form': form, 'employees': employees})
 
     def post(self, request):
@@ -222,7 +232,7 @@ class GoalCreateView(View):
         if form.is_valid():
             form.save()
             messages.success(request, "Goal created successfully!")
-            return redirect('goal_list')
+            return redirect('admin_dashboard')
         employees = User.objects.all()  # Adjust based on employee filter logic
         return render(request, 'goal_form.html', {'form': form, 'employees': employees})
 
