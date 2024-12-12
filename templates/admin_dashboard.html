@@ -85,10 +85,12 @@
                         <td>{{ user.username }}</td>
                         <td>{{ user.user_role }}</td>
                         <td>{{ user.department }}</td>
+                        {% if  user.user_role != 'Admin'  %}
                         <td>
                             <a href="{% url 'delete_user' user.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this user?');">Remove</a>
                             <a href="{% url 'edit_user' user.id %}" class="btn btn-primary btn-sm">Edit</a>
                         </td>
+                        {% endif %}
                     </tr>
                     {% endfor %}
                 </tbody>
